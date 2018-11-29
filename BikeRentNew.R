@@ -1,3 +1,14 @@
+library(psych)
+library(ggplot2)
+library(DMwR2)
+library(corrgram)
+library(randomForest)
+library(dummies)
+library(car)
+library(caTools)
+library(rpart)
+library(FNN)
+library(DMwR)
 # Lets start with loading the data
 df=read.csv('./day.csv')
 # Lets see the structure of the data
@@ -38,8 +49,7 @@ for(i in 1:ncol(df)){
 #  All variables in one go. The plots will contain each variable's histogram,
 #  KDE plot, and a line representing Normal Distribution for comparison.
 #   Import package from library
-library(psych)
-library(ggplot2)
+
 #   Plot the multi.hist for all numeric variables in DF
 multi.hist(df[,8:ncol(df)],dcol =c('blue','red'), dlty = c('solid','solid'),main = 'Variable Analysis' )
 #   Now for the factors, lets plot bar graph to see the count of each class 
@@ -79,7 +89,7 @@ for(i in c(10,11,12)){
 
 
 #install.packages('DMwR2')
-library(DMwR2)
+
 outlierImputer=function(df,num_cols){
   while (TRUE) {
     tot_miss=NULL
@@ -102,7 +112,7 @@ df=outlierImputer(df,num_cols[4:8])
 #    Lets step into feature selection
 #    Finding highly correlated numerical features with Count
 # install.packages('corrgram')
-library(corrgram)
+
 numFeatureSel=function(df,num_cols){
   corr=cor(df[,num_cols])
   corrgram(df[,num_cols],order = F,upper.panel = panel.pie,text.panel = panel.txt,main='Correlation Plot')
@@ -114,7 +124,7 @@ numFeatureSel(df,8:11)
 
 #   
 
-library(randomForest)
+
 imppred=randomForest(Count ~ ., data = df,ntree = 100, keep.forest = FALSE, importance = TRUE)
 importance(imppred, type = 1)
 df=subset(df,select = -c(Holiday))
@@ -163,10 +173,11 @@ backwardEliminationRF=function(df,sl){
 }
 
 rf_model=backwardEliminationRF(df_vif,5)
+imp=importance(rf_model)
 
 
 
-df_vif=df_vif[,-c(6:9,12:20)]
+df_vif=df_vif[,row.names(imp)]
 
 df_copy=df
 backwardElimination=function(df,sl){
@@ -183,15 +194,16 @@ backwardElimination=function(df,sl){
   return(regressor)
   
 }
-lr_model=backwardElimination(df_copy,0.05)
+lr_model=backwardElimination(df_copy,0.01)
 summary(lr_model)
+df_lr=df[,names(lr_model$coefficients)[-1]]
 
 df=df_vif
 #  Modeling the Data
 # Divide data into train and test using stratified sampling method
-library(caTools)
+
 set.seed(101) 
-sample = sample.split(df$Count, SplitRatio = .80)
+sample = sample.split(df$Count, 600)
 train = subset(df, sample == TRUE)
 test  = subset(df, sample == FALSE)
 
@@ -212,7 +224,7 @@ r=sum((y_pred-test[,13])^2)/sum((test[,13]-mean(test[,13]))^2)
 
 # Decision Tree Regression Model
 # install.packages('rpart')
-library(rpart)
+
 dt_model=rpart(Count~.,train,method = 'anova')
 y_pred_dt=predict(dt_model,test[,-13])
 r=sum((y_pred_dt-test[,13])^2)/sum((test[,13]-mean(test[,13]))^2)
@@ -228,14 +240,14 @@ y_pred_rf = predict(RF_model, test[,-13])
 r=sum((y_pred_rf-test[,13])^2)/sum((test[,13]-mean(test[,13]))^2)
 1-r #-> 0.834
 # KNN Regression Model
-library(FNN)
+
 knn_model=knn.reg(train = train[,-13],test=test[,-13],y=train[,13],k=5)
 y_pred_knn=knn_model$pred
 r=sum((y_pred_knn-test[,13])^2)/sum((test[,13]-mean(test[,13]))^2)
 1-r #-> 0.834
 
 # Error Metrics
-library(DMwR)
+
 #calculate MAPE
 MAPE = function(y, yhat){
   mean(abs((y - yhat)/y))
