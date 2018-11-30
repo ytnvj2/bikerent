@@ -19,9 +19,16 @@ R Packages:
 -caTools: Used to partition the data in train and test
 -FNN: used for KNN regression
 -dummies: used to create dummy variables
--
-Python libraries
+-car: used to calculate VIF values
 
+
+Python libraries
+-sklearn
+-pandas
+-numpy
+-os
+-fancyimpute
+-seaborn
 
 Information about the data:
 
