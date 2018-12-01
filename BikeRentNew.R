@@ -229,10 +229,11 @@ lr=lm(Count~.,train)
 y_pred=predict(lr_model,test[,1:14])
 #Summary of Linear model
 summary(lr_model)
-# Visualizing the linear model
-plot(lr_model) 
 r=sum((y_pred-test[,15])^2)/sum((test[,15]-mean(test[,15]))^2)
 1-r #-> 0.819
+# Visualizing the linear model
+plot(lr_model) 
+
 
 # Decision Tree Regression Model
 # install.packages('rpart')
