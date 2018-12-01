@@ -115,7 +115,7 @@ df=outlierImputer(df,num_cols[4:8])
 # install.packages('corrgram')
 
 # Feature Selection
-
+#  Finding correlated Numeric Features
 numFeatureSel=function(df,num_cols){
   corr=cor(df[,num_cols])
   corrgram(df[,num_cols],order = F,upper.panel = panel.pie,text.panel = panel.txt,main='Correlation Plot')
@@ -123,6 +123,8 @@ numFeatureSel=function(df,num_cols){
 numFeatureSel(df,num_cols)
 # based on correlation plot we remove the highly correlated variable
 df=subset(df,select = -c(Temp))
+
+# Finding significant categorical predictors using ANOVA 
 catFeatureSel=function(df,cat_cols){
   cSel=NULL
   for(i in cat_cols){

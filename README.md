@@ -54,8 +54,11 @@ clouds
 ##### registered: count of registered users
 ##### cnt: count of total rental bikes including both casual and registered
 
+## Problem Statement
+Prediction Model of Bike Rent Count based on environment and seasonal settings.
+
 ## Findings of EDA:
-No missing values present in the dataset. Outliers present in Windspeed and Humidity. Correlation present in numerical variables between temp and atemp, so temp was removed. ANOVA test conducted to find association and identify significant predictors. VIF to reduce dimension after converting categorical to dummy variables. Random Forest importance metric used to reduce the variables further, these variables used for RF Model, Decision Tree, and KNN. Linear Backward Elimination used to find the best variables for Linear Model. Feature Scaling performed on all variables except the target. This ends the Exploratory Data Analysis.
+No missing values present in the dataset. Outliers present in Windspeed and Humidity. Outliers removed using KNN Imputation. Correlation present in numerical variables between temp and atemp, so temp was removed. ANOVA test conducted to find association and identify significant predictors. VIF to reduce dimension after converting categorical to dummy variables. Random Forest importance metric used to reduce the variables further, these variables used for RF Model, Decision Tree, and KNN. Linear Backward Elimination used to find the best variables for Linear Model. Feature Scaling performed on all variables except the target. This ends the Exploratory Data Analysis.
 
 ## Models used:
 ##### Linear Regression: Used backward elimination to find the best model
