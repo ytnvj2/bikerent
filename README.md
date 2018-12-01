@@ -67,4 +67,9 @@ No missing values present in the dataset. Outliers present in Windspeed and Humi
 ##### KNN Regression: K was chosen as 7 after analyzing the test error and select k for which test error is the least.
 
 ## Model Evaluation:
+##### R2 Values for Test Set for all models
+###### Linear Model: 0.803
+###### Decision Tree Model: 0.65
+###### Random Forest Model: 0.797
+###### KNN Model: 0.83
 ##### Linear Regression resulted in the best adjusted R^2 value and hence was chosen as the best model.
